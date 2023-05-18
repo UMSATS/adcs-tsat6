@@ -57,6 +57,38 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define WDI_Pin GPIO_PIN_0
+#define WDI_GPIO_Port GPIOC
+#define M_nRESET_Pin GPIO_PIN_1
+#define M_nRESET_GPIO_Port GPIOC
+#define PWM1_Pin GPIO_PIN_0
+#define PWM1_GPIO_Port GPIOA
+#define PWM2_Pin GPIO_PIN_1
+#define PWM2_GPIO_Port GPIOA
+#define PWM3_Pin GPIO_PIN_2
+#define PWM3_GPIO_Port GPIOA
+#define PWMSW1_Pin GPIO_PIN_4
+#define PWMSW1_GPIO_Port GPIOA
+#define PWMSW2_Pin GPIO_PIN_5
+#define PWMSW2_GPIO_Port GPIOA
+#define PWMSW3_Pin GPIO_PIN_6
+#define PWMSW3_GPIO_Port GPIOA
+#define LED1_Pin GPIO_PIN_2
+#define LED1_GPIO_Port GPIOB
+#define LED2_Pin GPIO_PIN_10
+#define LED2_GPIO_Port GPIOB
+#define LED3_Pin GPIO_PIN_11
+#define LED3_GPIO_Port GPIOB
+#define BNO_H_CSN_Pin GPIO_PIN_12
+#define BNO_H_CSN_GPIO_Port GPIOB
+#define BNO_BOOTN_Pin GPIO_PIN_6
+#define BNO_BOOTN_GPIO_Port GPIOC
+#define BNO_PS0_Pin GPIO_PIN_7
+#define BNO_PS0_GPIO_Port GPIOC
+#define BNO_NRST_Pin GPIO_PIN_8
+#define BNO_NRST_GPIO_Port GPIOC
+#define BNO_H_INTN_Pin GPIO_PIN_9
+#define BNO_H_INTN_GPIO_Port GPIOC
 
 /* USER CODE BEGIN Private defines */
 
