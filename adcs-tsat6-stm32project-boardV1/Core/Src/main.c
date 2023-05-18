@@ -27,6 +27,7 @@
 #include "LEDs_driver.h"
 #include "MAX6822_driver.h"
 #include "can.h"
+#include "Magnetorquers_driver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -101,6 +102,8 @@ int main(void)
   MAX6822_Init();
 
   LEDs_Init();
+
+  Magnetorquers_Init();
 
   HAL_StatusTypeDef can_operation_status;
   can_operation_status = CAN_Init();
