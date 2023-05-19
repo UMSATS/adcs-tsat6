@@ -21,22 +21,22 @@
 //Public Define Directives
 //###############################################################################################
 #define PWM1_GPIO       GPIOA
-#define PWM1_PIN        GPIO_PIN_0
+#define PWM1_PIN        GPIO_PIN_1
 
 #define PWMSW1_GPIO     GPIOA
-#define PWMSW1_PIN      GPIO_PIN_4
+#define PWMSW1_PIN      GPIO_PIN_0
 
 #define PWM2_GPIO       GPIOA
-#define PWM2_PIN        GPIO_PIN_1
+#define PWM2_PIN        GPIO_PIN_7
 
 #define PWMSW2_GPIO     GPIOA
-#define PWMSW2_PIN      GPIO_PIN_5
+#define PWMSW2_PIN      GPIO_PIN_2
 
-#define PWM3_GPIO       GPIOA
-#define PWM3_PIN        GPIO_PIN_2
+#define PWM3_GPIO       GPIOC
+#define PWM3_PIN        GPIO_PIN_5
 
-#define PWMSW3_GPIO     GPIOA
-#define PWMSW3_PIN      GPIO_PIN_6
+#define PWMSW3_GPIO     GPIOC
+#define PWMSW3_PIN      GPIO_PIN_4
 
 //###############################################################################################
 //Public Driver Function Prototypes

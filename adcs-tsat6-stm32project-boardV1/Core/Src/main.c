@@ -266,14 +266,13 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(WDI_GPIO_Port, WDI_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, WDI_Pin|PWMSW3_Pin|PWM3_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, M_nRESET_Pin|BNO_BOOTN_Pin|BNO_PS0_Pin|BNO_NRST_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, PWM1_Pin|PWM2_Pin|PWM3_Pin|PWMSW1_Pin
-                          |PWMSW2_Pin|PWMSW3_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, PWMSW1_Pin|PWM1_Pin|PWMSW2_Pin|PWM2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, LED1_Pin|LED2_Pin|LED3_Pin, GPIO_PIN_RESET);
@@ -281,19 +280,17 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(BNO_H_CSN_GPIO_Port, BNO_H_CSN_Pin, GPIO_PIN_SET);
 
-  /*Configure GPIO pins : WDI_Pin M_nRESET_Pin BNO_BOOTN_Pin BNO_PS0_Pin
-                           BNO_NRST_Pin */
-  GPIO_InitStruct.Pin = WDI_Pin|M_nRESET_Pin|BNO_BOOTN_Pin|BNO_PS0_Pin
-                          |BNO_NRST_Pin;
+  /*Configure GPIO pins : WDI_Pin M_nRESET_Pin PWMSW3_Pin PWM3_Pin
+                           BNO_BOOTN_Pin BNO_PS0_Pin BNO_NRST_Pin */
+  GPIO_InitStruct.Pin = WDI_Pin|M_nRESET_Pin|PWMSW3_Pin|PWM3_Pin
+                          |BNO_BOOTN_Pin|BNO_PS0_Pin|BNO_NRST_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PWM1_Pin PWM2_Pin PWM3_Pin PWMSW1_Pin
-                           PWMSW2_Pin PWMSW3_Pin */
-  GPIO_InitStruct.Pin = PWM1_Pin|PWM2_Pin|PWM3_Pin|PWMSW1_Pin
-                          |PWMSW2_Pin|PWMSW3_Pin;
+  /*Configure GPIO pins : PWMSW1_Pin PWM1_Pin PWMSW2_Pin PWM2_Pin */
+  GPIO_InitStruct.Pin = PWMSW1_Pin|PWM1_Pin|PWMSW2_Pin|PWM2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
