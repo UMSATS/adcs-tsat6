@@ -167,7 +167,7 @@ HAL_StatusTypeDef BNO085_Send_Rotation_Vector_Telemetry()
     HAL_StatusTypeDef operation_status;
 
     CANMessage_t message1;
-    message1.priority = 0x00; //Max priority for functional testing - this should be changed later
+    message1.priority = 0x70; //Priority for functional testing - this should be changed later
     message1.DestinationID = 0x01; //CDH
     message1.command = BNO085_ROTATION_VECTOR_TELEMETRY_COMMAND_CODE;
 
@@ -184,7 +184,7 @@ HAL_StatusTypeDef BNO085_Send_Rotation_Vector_Telemetry()
     rotation_vector_telemetry_sequence++;
 
     CANMessage_t message2;
-    message2.priority = 0x00; //Max priority for functional testing - this should be changed later
+    message2.priority = 0x70; //Priority for functional testing - this should be changed later
     message2.DestinationID = 0x01; //CDH
     message2.command = BNO085_ROTATION_VECTOR_TELEMETRY_COMMAND_CODE;
 
