@@ -89,6 +89,7 @@ void Error_Handler(void);
 #define BNO_NRST_GPIO_Port GPIOC
 #define BNO_H_INTN_Pin GPIO_PIN_9
 #define BNO_H_INTN_GPIO_Port GPIOC
+#define BNO_H_INTN_EXTI_IRQn EXTI9_5_IRQn
 
 /* USER CODE BEGIN Private defines */
 

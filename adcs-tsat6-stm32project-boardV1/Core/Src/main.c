@@ -28,6 +28,7 @@
 #include "MAX6822_driver.h"
 #include "can.h"
 #include "Magnetorquers_driver.h"
+#include "BNO085_driver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -50,6 +51,9 @@ CAN_HandleTypeDef hcan1;
 SPI_HandleTypeDef hspi2;
 
 /* USER CODE BEGIN PV */
+//here for debugging to see if reading works & corresponds to initial read
+//(usually a blank space here, so leave an empty line when you delete it)
+GPIO_PinState pin_state;
 
 /* USER CODE END PV */
 
@@ -99,6 +103,11 @@ int main(void)
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
 
+  //here for debugging
+  //try doing a breakpoint here and after this function
+  //(since it may go low when you're about to do this function)
+  pin_state = HAL_GPIO_ReadPin(BNO085_H_INTN_GPIO, BNO085_H_INTN_PIN);
+
   MAX6822_Init();
 
   LEDs_Init();
@@ -109,12 +118,20 @@ int main(void)
   can_operation_status = CAN_Init();
   if (can_operation_status != HAL_OK) goto error;
 
+  HAL_StatusTypeDef bno085_operation_status;
+  bno085_operation_status = BNO085_Init();
+  if (bno085_operation_status != HAL_OK) goto error;
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+      MAX6822_WDI_Toggle();
+
+      //if CAN message queue is not empty
+      //    process & handle CAN message
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -305,9 +322,13 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin : BNO_H_INTN_Pin */
   GPIO_InitStruct.Pin = BNO_H_INTN_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(BNO_H_INTN_GPIO_Port, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
 }
 
@@ -325,6 +346,27 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
     if (operation_status != HAL_OK)
     {
         //TODO: Implement error handling for CAN message receives
+    }
+}
+
+/**
+  * @brief  GPIO pin external interrupt callback
+  * @param  GPIO_Pin: GPIO pin which triggered the interrupt
+  * @retval None
+  */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+    if (GPIO_Pin == BNO_H_INTN_Pin)
+    {
+        //here for debugging
+        pin_state = HAL_GPIO_ReadPin(BNO085_H_INTN_GPIO, BNO085_H_INTN_PIN);
+
+        HAL_StatusTypeDef operation_status;
+        operation_status = BNO085_Interrupt_Handler();
+        if (operation_status != HAL_OK)
+        {
+            //TODO: Implement error handling for BNO085 interrupt
+        }
     }
 }
 /* USER CODE END 4 */
