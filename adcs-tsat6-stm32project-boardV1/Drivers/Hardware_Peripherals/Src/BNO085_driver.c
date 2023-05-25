@@ -169,6 +169,7 @@ HAL_StatusTypeDef BNO085_Send_Rotation_Vector_Telemetry()
 
     CANMessage_t message1;
     message1.priority = 0x03; //Priority for functional testing - this should be changed later
+    message1.SenderID = SOURCE_ID; //ADCS
     message1.DestinationID = 0x01; //CDH
     message1.command = BNO085_ROTATION_VECTOR_TELEMETRY_COMMAND_CODE_1_OF_2;
 
@@ -185,6 +186,7 @@ HAL_StatusTypeDef BNO085_Send_Rotation_Vector_Telemetry()
 
     CANMessage_t message2;
     message2.priority = 0x03; //Priority for functional testing - this should be changed later
+    message2.SenderID = SOURCE_ID; //ADCS
     message2.DestinationID = 0x01; //CDH
     message2.command = BNO085_ROTATION_VECTOR_TELEMETRY_COMMAND_CODE_2_OF_2;
 

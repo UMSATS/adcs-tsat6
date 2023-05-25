@@ -56,7 +56,7 @@ error:
 /**
  * @brief Used to send messages over CAN
  *
- * @param myMessage: An 8 byte message
+ * @param myMessage: The CAN message
  *
  * @return HAL_StatusTypeDef
  */
@@ -85,7 +85,7 @@ HAL_StatusTypeDef CAN_Message_Received(){
     HAL_StatusTypeDef operation_status;
 	CAN_RxHeaderTypeDef rxMessage; // Received Message Header
 	uint8_t rxData[8]; // Received data
-	uint8_t receivedDestinationId; // ID of Received Message
+	uint8_t receivedDestinationId; // Destination ID of Received Message
 
 	/* Get RX message */
 	operation_status = HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &rxMessage, rxData);
@@ -96,7 +96,8 @@ HAL_StatusTypeDef CAN_Message_Received(){
 	    // *NOTE* Send message to queue per your subsystem here
 	    CANMessage_t can_message = {
 	        .priority = rxMessage.RTR == CAN_RTR_REMOTE ? 0x7F : rxMessage.ExtId >> 24,
-	        .DestinationID = rxMessage.ExtId & RECEIVED_DESTINATION_ID_MASK,
+	        .SenderID = (RECEIVED_SENDER_ID_MASK & rxMessage.StdId) >> 2,
+	        .DestinationID = receivedDestinationId,
 	        .command = rxData[0],
 	        .data = {rxData[1], rxData[2], rxData[3], rxData[4], rxData[5], rxData[6], rxData[7]}
 	    };
@@ -107,4 +108,22 @@ HAL_StatusTypeDef CAN_Message_Received(){
 
 error:
 	return operation_status;
+}
+
+/**
+ * @brief Send a CAN default ACK message for the given CAN message
+ *
+ * @param myMessage: The received CAN message to send the ACK for
+ *
+ * @return HAL_StatusTypeDef
+ */
+HAL_StatusTypeDef CAN_Send_Default_ACK(CANMessage_t myMessage){
+    CANMessage_t ack_message = {
+        .priority = myMessage.priority,
+        .SenderID = SOURCE_ID,
+        .DestinationID = myMessage.SenderID,
+        .command = 0x01,
+        .data = {myMessage.command, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+    };
+    return CAN_Transmit_Message(ack_message);
 }
