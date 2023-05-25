@@ -27,6 +27,7 @@
 #include "LEDs_driver.h"
 #include "MAX6822_driver.h"
 #include "can.h"
+#include "can_message_queue.h"
 #include "Magnetorquers_driver.h"
 #include "BNO085_driver.h"
 /* USER CODE END Includes */
@@ -51,6 +52,7 @@ CAN_HandleTypeDef hcan1;
 SPI_HandleTypeDef hspi2;
 
 /* USER CODE BEGIN PV */
+CANQueue_t can_queue;
 //here for debugging to see if reading works & corresponds to initial read
 //(usually a blank space here, so leave an empty line when you delete it)
 GPIO_PinState pin_state;
@@ -108,6 +110,8 @@ int main(void)
   //(since it may go low when you're about to do this function)
   pin_state = HAL_GPIO_ReadPin(BNO085_H_INTN_GPIO, BNO085_H_INTN_PIN);
 
+  CAN_Queue_Init(&can_queue);
+
   MAX6822_Init();
 
   LEDs_Init();
@@ -130,8 +134,68 @@ int main(void)
   {
       MAX6822_WDI_Toggle();
 
-      //if CAN message queue is not empty
-      //    process & handle CAN message
+      if(!CAN_Queue_IsEmpty(&can_queue))
+      {
+          CANMessage_t can_message;
+          CAN_Queue_Dequeue(&can_queue, &can_message);
+          switch (can_message.command)
+          {
+              case 0xB0: //STM32 Reset
+                  MAX6822_Manual_Reset();
+                  break;
+
+              case 0xB1: //Magnetorquer 1 Full Strength
+                  Magnetorquer1_Full_Strength();
+                  break;
+
+              case 0xB2: //Magnetorquer 2 Full Strength
+                  Magnetorquer2_Full_Strength();
+                  break;
+
+              case 0xB3: //Magnetorquer 3 Full Strength
+                  Magnetorquer3_Full_Strength();
+                  break;
+
+              case 0xB4: //Magnetorquer 1 Off
+                  Magnetorquer1_Off();
+                  break;
+
+              case 0xB5: //Magnetorquer 2 Off
+                  Magnetorquer2_Off();
+                  break;
+
+              case 0xB6: //Magnetorquer 3 Off
+                  Magnetorquer3_Off();
+                  break;
+
+              case 0xB7: //Magnetorquer 1 Forward Direction
+                  Magnetorquer1_Forward();
+                  break;
+
+              case 0xB8: //Magnetorquer 2 Forward Direction
+                  Magnetorquer2_Forward();
+                  break;
+
+              case 0xB9: //Magnetorquer 3 Forward Direction
+                  Magnetorquer3_Forward();
+                  break;
+
+              case 0xBA: //Magnetorquer 1 Reverse Direction
+                  Magnetorquer1_Reverse();
+                  break;
+
+              case 0xBB: //Magnetorquer 2 Reverse Direction
+                  Magnetorquer2_Reverse();
+                  break;
+
+              case 0xBC: //Magnetorquer 3 Reverse Direction
+                  Magnetorquer3_Reverse();
+                  break;
+
+              default:
+                  break;
+          }
+      }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

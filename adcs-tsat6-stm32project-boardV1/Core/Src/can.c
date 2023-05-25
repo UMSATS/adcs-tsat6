@@ -17,6 +17,7 @@
 //###############################################################################################
 #include <stdio.h>
 #include "can.h"
+#include "can_message_queue.h"
 
 //###############################################################################################
 //Public Functions
@@ -93,16 +94,15 @@ HAL_StatusTypeDef CAN_Message_Received(){
 
 	if(receivedDestinationId == SOURCE_ID){
 	    // *NOTE* Send message to queue per your subsystem here
+	    CANMessage_t can_message = {
+	        .priority = rxMessage.RTR == CAN_RTR_REMOTE ? 0x7F : rxMessage.ExtId >> 24,
+	        .DestinationID = rxMessage.ExtId & RECEIVED_DESTINATION_ID_MASK,
+	        .command = rxData[0],
+	        .data = {rxData[1], rxData[2], rxData[3], rxData[4], rxData[5], rxData[6], rxData[7]}
+	    };
+	    CAN_Queue_Enqueue(&can_queue, &can_message);
 
 		// *NOTE* program custom handling per your subsystem here
-		CANMessage_t ping;
-		ping.DestinationID = 0x2;
-		ping.command = rxData[0];
-		ping.priority = 1;
-		for(uint8_t i = 0; i <= 6; i++){
-			ping.data[i] = rxData[i+1] + 1;
-		}
-		operation_status = CAN_Transmit_Message(ping);
 	}
 
 error:
