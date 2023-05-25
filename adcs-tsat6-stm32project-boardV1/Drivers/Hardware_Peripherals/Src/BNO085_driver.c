@@ -21,9 +21,10 @@
 //###############################################################################################
 //Define Directives
 //###############################################################################################
-#define BNO085_ROTATION_VECTOR_TELEMETRY_COMMAND_CODE   0x00
+#define BNO085_ROTATION_VECTOR_TELEMETRY_COMMAND_CODE_1_OF_2    0x35
+#define BNO085_ROTATION_VECTOR_TELEMETRY_COMMAND_CODE_2_OF_2    0x36
 
-#define BNO085_NUMBER_OF_INIT_MESSAGES                  0x02
+#define BNO085_NUMBER_OF_INIT_MESSAGES                          0x02
 
 //###############################################################################################
 //Global Variable Declarations
@@ -167,34 +168,31 @@ HAL_StatusTypeDef BNO085_Send_Rotation_Vector_Telemetry()
     HAL_StatusTypeDef operation_status;
 
     CANMessage_t message1;
-    message1.priority = 0x50; //Priority for functional testing - this should be changed later
+    message1.priority = 0x03; //Priority for functional testing - this should be changed later
     message1.DestinationID = 0x01; //CDH
-    message1.command = BNO085_ROTATION_VECTOR_TELEMETRY_COMMAND_CODE;
+    message1.command = BNO085_ROTATION_VECTOR_TELEMETRY_COMMAND_CODE_1_OF_2;
 
     message1.data[0] = rotation_vector_telemetry_sequence;
-    message1.data[1] = 0x00; //1 of 2 messages
-    message1.data[2] = rotation_vector.q_i >> 8;
-    message1.data[3] = rotation_vector.q_i;
-    message1.data[4] = rotation_vector.q_j >> 8;
-    message1.data[5] = rotation_vector.q_j;
-    message1.data[6] = rotation_vector.q_k >> 8;
+    message1.data[1] = rotation_vector.q_i >> 8;
+    message1.data[2] = rotation_vector.q_i;
+    message1.data[3] = rotation_vector.q_j >> 8;
+    message1.data[4] = rotation_vector.q_j;
+    message1.data[5] = rotation_vector.q_k >> 8;
+    message1.data[6] = rotation_vector.q_k;
 
     operation_status = CAN_Transmit_Message(message1);
     if (operation_status != HAL_OK) goto error;
-    rotation_vector_telemetry_sequence++;
 
     CANMessage_t message2;
-    message2.priority = 0x50; //Priority for functional testing - this should be changed later
+    message2.priority = 0x03; //Priority for functional testing - this should be changed later
     message2.DestinationID = 0x01; //CDH
-    message2.command = BNO085_ROTATION_VECTOR_TELEMETRY_COMMAND_CODE;
+    message2.command = BNO085_ROTATION_VECTOR_TELEMETRY_COMMAND_CODE_2_OF_2;
 
     message2.data[0] = rotation_vector_telemetry_sequence;
-    message2.data[1] = 0x01; //2 of 2 messages
-    message2.data[2] = rotation_vector.q_k;
-    message2.data[3] = rotation_vector.q_real >> 8;
-    message2.data[4] = rotation_vector.q_real;
-    message2.data[5] = rotation_vector.accuracy >> 8;
-    message2.data[6] = rotation_vector.accuracy;
+    message2.data[1] = rotation_vector.q_real >> 8;
+    message2.data[2] = rotation_vector.q_real;
+    message2.data[3] = rotation_vector.accuracy >> 8;
+    message2.data[4] = rotation_vector.accuracy;
 
     operation_status = CAN_Transmit_Message(message2);
     if (operation_status != HAL_OK) goto error;
