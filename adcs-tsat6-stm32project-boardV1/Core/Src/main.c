@@ -122,9 +122,9 @@ int main(void)
   can_operation_status = CAN_Init();
   if (can_operation_status != HAL_OK) goto error;
 
-  HAL_StatusTypeDef bno085_operation_status;
+  /*HAL_StatusTypeDef bno085_operation_status;
   bno085_operation_status = BNO085_Init();
-  if (bno085_operation_status != HAL_OK) goto error;
+  if (bno085_operation_status != HAL_OK) goto error;*/
 
   /* USER CODE END 2 */
 
