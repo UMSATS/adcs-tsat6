@@ -29,6 +29,7 @@
 #include "can.h"
 #include "can_message_queue.h"
 #include "Magnetorquers_driver.h"
+#include "gyroscope.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -112,6 +113,12 @@ int main(void)
   MAX6822_Init();
 
   LEDs_Init();
+
+  A3G4250D_Init();
+
+  float Data[3];
+
+  A3G4250D_ReadGyro(Data);
 
   Magnetorquers_Init();
 
