@@ -61,6 +61,8 @@ void Error_Handler(void);
 #define WDI_GPIO_Port GPIOC
 #define M_nRESET_Pin GPIO_PIN_1
 #define M_nRESET_GPIO_Port GPIOC
+#define PCB_TEMP_ADC_IN_Pin GPIO_PIN_2
+#define PCB_TEMP_ADC_IN_GPIO_Port GPIOC
 #define PWMSW1_Pin GPIO_PIN_0
 #define PWMSW1_GPIO_Port GPIOA
 #define PWM1_Pin GPIO_PIN_1
@@ -79,17 +81,31 @@ void Error_Handler(void);
 #define LED2_GPIO_Port GPIOB
 #define LED3_Pin GPIO_PIN_11
 #define LED3_GPIO_Port GPIOB
-#define BNO_H_CSN_Pin GPIO_PIN_12
-#define BNO_H_CSN_GPIO_Port GPIOB
-#define BNO_BOOTN_Pin GPIO_PIN_6
-#define BNO_BOOTN_GPIO_Port GPIOC
-#define BNO_PS0_Pin GPIO_PIN_7
-#define BNO_PS0_GPIO_Port GPIOC
-#define BNO_NRST_Pin GPIO_PIN_8
-#define BNO_NRST_GPIO_Port GPIOC
-#define BNO_H_INTN_Pin GPIO_PIN_9
-#define BNO_H_INTN_GPIO_Port GPIOC
-#define BNO_H_INTN_EXTI_IRQn EXTI9_5_IRQn
+#define GYR2_nCS_Pin GPIO_PIN_12
+#define GYR2_nCS_GPIO_Port GPIOB
+#define GYR1_nCS_Pin GPIO_PIN_6
+#define GYR1_nCS_GPIO_Port GPIOC
+#define GYR2_INT1_Pin GPIO_PIN_7
+#define GYR2_INT1_GPIO_Port GPIOC
+#define GYR2_INT1_EXTI_IRQn EXTI9_5_IRQn
+#define GYR2_INT2_Pin GPIO_PIN_8
+#define GYR2_INT2_GPIO_Port GPIOA
+#define GYR2_INT2_EXTI_IRQn EXTI9_5_IRQn
+#define GYR1_INT1_Pin GPIO_PIN_9
+#define GYR1_INT1_GPIO_Port GPIOA
+#define GYR1_INT1_EXTI_IRQn EXTI9_5_IRQn
+#define GYR1_INT2_Pin GPIO_PIN_10
+#define GYR1_INT2_GPIO_Port GPIOA
+#define MAG2_nCS_Pin GPIO_PIN_15
+#define MAG2_nCS_GPIO_Port GPIOA
+#define MAG1_nCS_Pin GPIO_PIN_2
+#define MAG1_nCS_GPIO_Port GPIOD
+#define MAG1_INT_Pin GPIO_PIN_5
+#define MAG1_INT_GPIO_Port GPIOB
+#define MAG1_INT_EXTI_IRQn EXTI9_5_IRQn
+#define MAG2_INT_Pin GPIO_PIN_6
+#define MAG2_INT_GPIO_Port GPIOB
+#define MAG2_INT_EXTI_IRQn EXTI9_5_IRQn
 
 /* USER CODE BEGIN Private defines */
 

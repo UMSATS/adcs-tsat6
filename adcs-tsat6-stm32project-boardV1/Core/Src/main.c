@@ -29,7 +29,6 @@
 #include "can.h"
 #include "can_message_queue.h"
 #include "Magnetorquers_driver.h"
-#include "BNO085_driver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,15 +46,15 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+ADC_HandleTypeDef hadc1;
+
 CAN_HandleTypeDef hcan1;
 
 SPI_HandleTypeDef hspi2;
+SPI_HandleTypeDef hspi3;
 
 /* USER CODE BEGIN PV */
 CANQueue_t can_queue;
-//here for debugging to see if reading works & corresponds to initial read
-//(usually a blank space here, so leave an empty line when you delete it)
-GPIO_PinState pin_state;
 
 /* USER CODE END PV */
 
@@ -64,6 +63,8 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_CAN1_Init(void);
 static void MX_SPI2_Init(void);
+static void MX_ADC1_Init(void);
+static void MX_SPI3_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -103,13 +104,9 @@ int main(void)
   MX_GPIO_Init();
   MX_CAN1_Init();
   MX_SPI2_Init();
+  MX_ADC1_Init();
+  MX_SPI3_Init();
   /* USER CODE BEGIN 2 */
-
-  //here for debugging
-  //try doing a breakpoint here and after this function
-  //(since it may go low when you're about to do this function)
-  pin_state = HAL_GPIO_ReadPin(BNO085_H_INTN_GPIO, BNO085_H_INTN_PIN);
-
   CAN_Queue_Init(&can_queue);
 
   MAX6822_Init();
@@ -121,10 +118,6 @@ int main(void)
   HAL_StatusTypeDef can_operation_status;
   can_operation_status = CAN_Init();
   if (can_operation_status != HAL_OK) goto error;
-
-  /*HAL_StatusTypeDef bno085_operation_status;
-  bno085_operation_status = BNO085_Init();
-  if (bno085_operation_status != HAL_OK) goto error;*/
 
   /* USER CODE END 2 */
 
@@ -269,6 +262,65 @@ void SystemClock_Config(void)
 }
 
 /**
+  * @brief ADC1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_ADC1_Init(void)
+{
+
+  /* USER CODE BEGIN ADC1_Init 0 */
+
+  /* USER CODE END ADC1_Init 0 */
+
+  ADC_ChannelConfTypeDef sConfig = {0};
+
+  /* USER CODE BEGIN ADC1_Init 1 */
+
+  /* USER CODE END ADC1_Init 1 */
+
+  /** Common config
+  */
+  hadc1.Instance = ADC1;
+  hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
+  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;
+  hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  hadc1.Init.LowPowerAutoWait = DISABLE;
+  hadc1.Init.ContinuousConvMode = DISABLE;
+  hadc1.Init.NbrOfConversion = 1;
+  hadc1.Init.DiscontinuousConvMode = DISABLE;
+  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc1.Init.DMAContinuousRequests = DISABLE;
+  hadc1.Init.Overrun = ADC_OVR_DATA_PRESERVED;
+  hadc1.Init.OversamplingMode = DISABLE;
+  hadc1.Init.DFSDMConfig = ADC_DFSDM_MODE_ENABLE;
+  if (HAL_ADC_Init(&hadc1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_3;
+  sConfig.Rank = ADC_REGULAR_RANK_1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
+  sConfig.SingleDiff = ADC_SINGLE_ENDED;
+  sConfig.OffsetNumber = ADC_OFFSET_NONE;
+  sConfig.Offset = 0;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN ADC1_Init 2 */
+
+  /* USER CODE END ADC1_Init 2 */
+
+}
+
+/**
   * @brief CAN1 Initialization Function
   * @param None
   * @retval None
@@ -346,6 +398,46 @@ static void MX_SPI2_Init(void)
 }
 
 /**
+  * @brief SPI3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_SPI3_Init(void)
+{
+
+  /* USER CODE BEGIN SPI3_Init 0 */
+
+  /* USER CODE END SPI3_Init 0 */
+
+  /* USER CODE BEGIN SPI3_Init 1 */
+
+  /* USER CODE END SPI3_Init 1 */
+  /* SPI3 parameter configuration*/
+  hspi3.Instance = SPI3;
+  hspi3.Init.Mode = SPI_MODE_MASTER;
+  hspi3.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi3.Init.DataSize = SPI_DATASIZE_8BIT;
+  hspi3.Init.CLKPolarity = SPI_POLARITY_LOW;
+  hspi3.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi3.Init.NSS = SPI_NSS_SOFT;
+  hspi3.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi3.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  hspi3.Init.TIMode = SPI_TIMODE_DISABLE;
+  hspi3.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  hspi3.Init.CRCPolynomial = 7;
+  hspi3.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
+  hspi3.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+  if (HAL_SPI_Init(&hspi3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN SPI3_Init 2 */
+
+  /* USER CODE END SPI3_Init 2 */
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -358,12 +450,13 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, WDI_Pin|PWMSW3_Pin|PWM3_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, M_nRESET_Pin|BNO_BOOTN_Pin|BNO_PS0_Pin|BNO_NRST_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOC, M_nRESET_Pin|GYR1_nCS_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, PWMSW1_Pin|PWM1_Pin|PWMSW2_Pin|PWM2_Pin, GPIO_PIN_RESET);
@@ -372,36 +465,63 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOB, LED1_Pin|LED2_Pin|LED3_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(BNO_H_CSN_GPIO_Port, BNO_H_CSN_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GYR2_nCS_GPIO_Port, GYR2_nCS_Pin, GPIO_PIN_SET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(MAG2_nCS_GPIO_Port, MAG2_nCS_Pin, GPIO_PIN_SET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(MAG1_nCS_GPIO_Port, MAG1_nCS_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pins : WDI_Pin M_nRESET_Pin PWMSW3_Pin PWM3_Pin
-                           BNO_BOOTN_Pin BNO_PS0_Pin BNO_NRST_Pin */
+                           GYR1_nCS_Pin */
   GPIO_InitStruct.Pin = WDI_Pin|M_nRESET_Pin|PWMSW3_Pin|PWM3_Pin
-                          |BNO_BOOTN_Pin|BNO_PS0_Pin|BNO_NRST_Pin;
+                          |GYR1_nCS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PWMSW1_Pin PWM1_Pin PWMSW2_Pin PWM2_Pin */
-  GPIO_InitStruct.Pin = PWMSW1_Pin|PWM1_Pin|PWMSW2_Pin|PWM2_Pin;
+  /*Configure GPIO pins : PWMSW1_Pin PWM1_Pin PWMSW2_Pin PWM2_Pin
+                           MAG2_nCS_Pin */
+  GPIO_InitStruct.Pin = PWMSW1_Pin|PWM1_Pin|PWMSW2_Pin|PWM2_Pin
+                          |MAG2_nCS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LED1_Pin LED2_Pin LED3_Pin BNO_H_CSN_Pin */
-  GPIO_InitStruct.Pin = LED1_Pin|LED2_Pin|LED3_Pin|BNO_H_CSN_Pin;
+  /*Configure GPIO pins : LED1_Pin LED2_Pin LED3_Pin GYR2_nCS_Pin */
+  GPIO_InitStruct.Pin = LED1_Pin|LED2_Pin|LED3_Pin|GYR2_nCS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : BNO_H_INTN_Pin */
-  GPIO_InitStruct.Pin = BNO_H_INTN_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  /*Configure GPIO pin : GYR2_INT1_Pin */
+  GPIO_InitStruct.Pin = GYR2_INT1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(BNO_H_INTN_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GYR2_INT1_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : GYR2_INT2_Pin GYR1_INT1_Pin GYR1_INT2_Pin */
+  GPIO_InitStruct.Pin = GYR2_INT2_Pin|GYR1_INT1_Pin|GYR1_INT2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : MAG1_nCS_Pin */
+  GPIO_InitStruct.Pin = MAG1_nCS_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(MAG1_nCS_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : MAG1_INT_Pin MAG2_INT_Pin */
+  GPIO_InitStruct.Pin = MAG1_INT_Pin|MAG2_INT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
@@ -423,27 +543,6 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
     if (operation_status != HAL_OK)
     {
         //TODO: Implement error handling for CAN message receives
-    }
-}
-
-/**
-  * @brief  GPIO pin external interrupt callback
-  * @param  GPIO_Pin: GPIO pin which triggered the interrupt
-  * @retval None
-  */
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-    if (GPIO_Pin == BNO_H_INTN_Pin)
-    {
-        //here for debugging
-        pin_state = HAL_GPIO_ReadPin(BNO085_H_INTN_GPIO, BNO085_H_INTN_PIN);
-
-        HAL_StatusTypeDef operation_status;
-        operation_status = BNO085_Interrupt_Handler();
-        if (operation_status != HAL_OK)
-        {
-            //TODO: Implement error handling for BNO085 interrupt
-        }
     }
 }
 /* USER CODE END 4 */
