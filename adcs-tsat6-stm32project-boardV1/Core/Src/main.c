@@ -29,7 +29,7 @@
 #include "can.h"
 #include "can_message_queue.h"
 #include "Magnetorquers_driver.h"
-#include "gyroscope.h"
+#include "GYRO_A3G4250DTR_driver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -114,11 +114,7 @@ int main(void)
 
   LEDs_Init();
 
-  A3G4250D_Init();
-
-  float Data[3];
-
-  A3G4250D_ReadGyro(Data);
+  GYRO_Init();
 
   Magnetorquers_Init();
 
