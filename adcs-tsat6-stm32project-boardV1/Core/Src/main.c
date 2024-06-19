@@ -30,6 +30,7 @@
 #include "can_message_queue.h"
 #include "Magnetorquers_driver.h"
 #include "GYRO_A3G4250DTR_driver.h"
+#include "magnetometer_driver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -115,6 +116,8 @@ int main(void)
   LEDs_Init();
 
   GYRO_Init();
+
+  MAG_Init();
 
   Magnetorquers_Init();
 
