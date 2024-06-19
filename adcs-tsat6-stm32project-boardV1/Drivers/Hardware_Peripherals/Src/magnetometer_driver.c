@@ -3,14 +3,14 @@
 #include <stdio.h>
 #include "main.h"
 
-extern SPI_HandleTypeDef hspi2;
+extern SPI_HandleTypeDef hspi3;
 
 
 // Function to write to MAGNETOMETER register
 void MAG_WriteReg(uint8_t reg, uint8_t data) {
 	HAL_GPIO_WritePin(MAG2_nCS_GPIO_Port, MAG2_nCS_Pin, GPIO_PIN_RESET);
 	uint8_t txData[2] = {reg, data};
-	HAL_SPI_Transmit(&hspi2, txData, 2, 100);
+	HAL_SPI_Transmit(&hspi3, txData, 2, 100);
 	HAL_GPIO_WritePin(MAG2_nCS_GPIO_Port, MAG2_nCS_Pin, GPIO_PIN_SET);
 }
 
@@ -19,8 +19,8 @@ uint8_t MAG_ReadReg(uint8_t reg) {
 	HAL_GPIO_WritePin(MAG2_nCS_GPIO_Port, MAG2_nCS_Pin, GPIO_PIN_RESET);
 	uint8_t txData = 0x80 | reg; // MSB must be set for read
 	uint8_t rxData;
-	HAL_SPI_Transmit(&hspi2, &txData, 1, 100);
-	HAL_SPI_Receive(&hspi2, &rxData, 1, 100);
+	HAL_SPI_Transmit(&hspi3, &txData, 1, 100);
+	HAL_SPI_Receive(&hspi3, &rxData, 1, 100);
 	HAL_GPIO_WritePin(MAG2_nCS_GPIO_Port, MAG2_nCS_Pin, GPIO_PIN_SET);
 	return rxData;
 }
@@ -46,7 +46,6 @@ void MAG_Init(void) {
 	// Set CS pin high
 	HAL_GPIO_WritePin(MAG2_nCS_GPIO_Port, MAG2_nCS_Pin, GPIO_PIN_SET);
 	// Configure magnetic sensor settings
-	(MAG_CONTROL_0, 0x00); // Reset sensor
+	MAG_WriteReg(MAG_CONTROL_0, 0x00); // Reset sensor
 	HAL_Delay(1); // Wait for reset to complete
-	(MAG_CONTROL_0, 0x01); // Start measurement
 }
