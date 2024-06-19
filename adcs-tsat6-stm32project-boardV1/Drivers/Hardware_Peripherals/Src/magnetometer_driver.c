@@ -43,9 +43,10 @@ void MAG_ReadMagneticField(int *pData) {
 
 // Function to initialize MAGNETOMETER
 void MAG_Init(void) {
-	// Set CS pin high
-	HAL_GPIO_WritePin(MAG2_nCS_GPIO_Port, MAG2_nCS_Pin, GPIO_PIN_SET);
-	// Configure magnetic sensor settings
-	MAG_WriteReg(MAG_CONTROL_0, 0x00); // Reset sensor
-	HAL_Delay(1); // Wait for reset to complete
+  // Set CS pin high
+  HAL_GPIO_WritePin(MAG1_nCS_GPIO_Port, MAG1_nCS_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(MAG2_nCS_GPIO_Port, MAG2_nCS_Pin, GPIO_PIN_SET);
+  // Configure magnetic sensor settings
+  MAG_WriteReg(MAG_CONTROL_0, 0x00); // Reset sensor
+  HAL_Delay(1); // Wait for reset to complete
 }

@@ -56,10 +56,11 @@ void GYRO_ReadAngRate(int *pData){
 }
 
 void GYRO_Init(void) {
-	// Set CS pin high
-	HAL_GPIO_WritePin(GYR2_nCS_GPIO_Port, GYR2_nCS_Pin, GPIO_PIN_SET);
-	// Configure gyroscope settings
-	GYRO_WriteReg(GYRO_CTRL_REG1, 0x0F); // Enable all axes, normal mode, 100Hz data rate
+  // Set CS pin high
+  HAL_GPIO_WritePin(GYR1_nCS_GPIO_Port, GYR1_nCS_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GYR2_nCS_GPIO_Port, GYR2_nCS_Pin, GPIO_PIN_SET);
+  // Configure gyroscope settings
+  GYRO_WriteReg(GYRO_CTRL_REG1, 0x0F); // Enable all axes, normal mode, 100Hz data rate
 }
 
 
