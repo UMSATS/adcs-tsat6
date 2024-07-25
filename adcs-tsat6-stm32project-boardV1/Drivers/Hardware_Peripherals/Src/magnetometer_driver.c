@@ -26,7 +26,7 @@ uint8_t MAG_ReadReg(uint8_t reg) {
 }
 
 // Function to read magnetic field data
-void MAG_ReadMagneticField(int *pData) {
+void MAG_ReadMagneticField(int16_t *pData) {
 	uint8_t tmpbuffer[6] = {0};
 
 	tmpbuffer[0] = MAG_ReadReg(MAG_XOUT_L);
@@ -36,9 +36,9 @@ void MAG_ReadMagneticField(int *pData) {
 	tmpbuffer[4] = MAG_ReadReg(MAG_ZOUT_L);
 	tmpbuffer[5] = MAG_ReadReg(MAG_ZOUT_H);
 
-	pData[0] = (int)(tmpbuffer[1] << 8 | tmpbuffer[0]);
-	pData[1] = (int)(tmpbuffer[3] << 8 | tmpbuffer[2]);
-	pData[2] = (int)(tmpbuffer[5] << 8 | tmpbuffer[4]);
+	pData[0] = (int16_t)((tmpbuffer[1] << 8) | tmpbuffer[0]);
+	pData[1] = (int16_t)((tmpbuffer[3] << 8) | tmpbuffer[2]);
+	pData[2] = (int16_t)((tmpbuffer[5] << 8) | tmpbuffer[4]);
 }
 
 // Function to initialize MAGNETOMETER
