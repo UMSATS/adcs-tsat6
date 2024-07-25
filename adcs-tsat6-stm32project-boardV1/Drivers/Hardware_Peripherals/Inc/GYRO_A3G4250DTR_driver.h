@@ -34,7 +34,7 @@ void GYRO_WriteReg(uint8_t reg, uint8_t data);
 uint8_t GYRO_ReadReg(uint8_t reg);
 
 // Function to read gyroscope data
-void GYRO_ReadAngRate(int *pData);
+void GYRO_ReadAngRate(int16_t *pData);
 
 // Function to initialize A3G4250D
 void GYRO_Init(void);
