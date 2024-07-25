@@ -36,7 +36,7 @@ uint8_t MAG_ReadReg(uint8_t reg);
 // Function to read magnetic field data
 // pData: Pointer to an array where the magnetic field data will be stored
 // The array has 3 elements for X, Y, and Z
-void MAG_ReadMagneticField(int *pData);
+void MAG_ReadMagneticField(int16_t *pData);
 
 // Function to initialize MAGNETOMETER
 void MAG_Init(void);
