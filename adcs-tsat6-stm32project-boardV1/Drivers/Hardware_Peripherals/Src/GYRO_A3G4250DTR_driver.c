@@ -40,7 +40,7 @@ uint8_t GYRO_ReadReg(uint8_t reg) {
     return rxData;
 }
 
-void GYRO_ReadAngRate(int *pData){
+void GYRO_ReadAngRate(int16_t *pData){
 	uint8_t tmpbuffer[6] = {0};
 
 	tmpbuffer[0] = GYRO_ReadReg(GYRO_OUT_X_L);
@@ -50,9 +50,9 @@ void GYRO_ReadAngRate(int *pData){
 	tmpbuffer[4] = GYRO_ReadReg(GYRO_OUT_Z_L);
 	tmpbuffer[5] = GYRO_ReadReg(GYRO_OUT_Z_H);
 
-	pData[0] = (int)(tmpbuffer[1] << 8 | tmpbuffer[0]);
-	pData[1] = (int)(tmpbuffer[3] << 8 | tmpbuffer[2]);
-	pData[2] = (int)(tmpbuffer[5] << 8 | tmpbuffer[4]);
+	pData[0] = (int16_t)(tmpbuffer[1] << 8 | tmpbuffer[0]);
+	pData[1] = (int16_t)(tmpbuffer[3] << 8 | tmpbuffer[2]);
+	pData[2] = (int16_t)(tmpbuffer[5] << 8 | tmpbuffer[4]);
 }
 
 void GYRO_Init(void) {
